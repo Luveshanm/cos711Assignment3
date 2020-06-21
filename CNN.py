@@ -1,7 +1,5 @@
 import pandas as pd
 import numpy as np
-from scipy import stats
-import math
 from array import *
 from sklearn.model_selection import train_test_split
 import tensorflow as tf 
@@ -46,38 +44,26 @@ trainingTarget = np.array(trainingTarget)
 model = Sequential()
 
 model.add(Conv1D(128, 3, input_shape=trainingData.shape[1:] ))
-model.add(Activation("relu"))
+model.add(Activation("tanh"))
 model.add(MaxPooling1D( pool_size=2 ) )
 
-model.add(Conv1D(64, 1))
-model.add(Activation("relu"))
+model.add(Conv1D(128, 1))
+model.add(Activation("tanh"))
 model.add(MaxPooling1D( pool_size=1 ) )
 
 model.add(Flatten())
-model.add(Dense(32))
+model.add(Dense(64, activation='relu'))
 
 model.add(Dense(1))
 model.add(Activation("linear"))
 
 model.compile( 	loss = "mse",
 				optimizer = "adam",
-				metrics = ["accuracy"] )
+				metrics = [tf.keras.metrics.RootMeanSquaredError()] )
 
-model.fit( trainingData, trainingTarget, epochs=10, batch_size=32, validation_split=0.1)
+model.fit( trainingData, trainingTarget, epochs=25, batch_size=32, validation_split=0.2, shuffle=True )
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+print(model.summary())
 
 
 

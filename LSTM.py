@@ -44,11 +44,11 @@ trainingTarget = np.array(trainingTarget)
 
 #Normalization
 normed_matrix = normalize(trainingData[0], axis=1, norm='max')
-print(normed_matrix)
+# print(normed_matrix)
 
 model = Sequential()
 
-model.add(LSTM(64, input_shape=trainingData.shape[1:], return_sequences=True) )
+model.add(LSTM(128, input_shape=trainingData.shape[1:], return_sequences=True) )
 model.add(Dropout(0.2))
 
 model.add(LSTM(64) )
@@ -59,13 +59,13 @@ model.add(Dropout(0.2))
 
 model.add(Dense(1, activation='linear') )
 
-opt = tf.keras.optimizers.Adam(lr=1e-2, decay=1e-5)
+# opt = tf.keras.optimizers.Adam(lr=1e-2, decay=1e-5)
 
-model.compile(loss="mse", optimizer=opt, metrics=['accuracy'] )
+model.compile(loss="mse", optimizer="adam", metrics=[tf.keras.metrics.RootMeanSquaredError()] )
 
-# model.fit(trainingData, trainingTarget, epochs=10, batch_size=32, validation_split=0.1)
+model.fit(trainingData, trainingTarget, epochs=25, batch_size=32, validation_split=0.2, shuffle=True )
 
-
+print(model.summary())
 
 
 

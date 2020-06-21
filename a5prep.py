@@ -3,8 +3,6 @@ import numpy as np
 from scipy import stats
 import math
 from array import *
-from sklearn.model_selection import train_test_split
-import tensorflow as tf 
 
 airData = pd.read_csv("Train.csv", sep=",")
 # print(airData)
@@ -95,6 +93,36 @@ def checkForNaNs(inputArray):
 				return True
 	
 	return False
+	
+def standardizeColumn(inputArray):
+	nrows, ncols = inputArray.shape
+	print(inputArray.shape)
+	
+	allValues = []
+	for row in inputArray:
+		for x in row:
+			allValues.append(x)				#Create 1D array of all values 
+	
+	allValues = np.asarray(allValues)
+	print(allValues.shape)
+	mean = np.mean(allValues)
+	# print(mean)
+	stdDev = np.std(allValues)
+	# print(stdDev)
+	
+	index = 0
+	for v in allValues:
+		allValues[index] = (v-mean)/stdDev
+		index = index+1
+		
+	# print(np.mean(allValues))
+	# print(np.std(allValues))
+	# print(allValues.shape)
+	
+	inputArray = np.reshape(allValues, (-1, 121))
+	print(inputArray.shape)
+	
+	return inputArray
 
 # print( np.array([temp_arr[2]]) )
 # answer = replaceAllNaNs( np.array([temp_arr[2]]) )
@@ -103,31 +131,37 @@ def checkForNaNs(inputArray):
 #Temperature
 temp_arr = fixSingularNaNs(temp_arr)
 temp_arr = replaceAllNaNs(temp_arr)
+temp_arr = standardizeColumn(temp_arr)
 print(checkForNaNs(temp_arr) )
 
 #Precipitation
 precip_arr = fixSingularNaNs(precip_arr)
 precip_arr = replaceAllNaNs(precip_arr)
+precip_arr = standardizeColumn(precip_arr)
 print(checkForNaNs(precip_arr) )
 
 #Relative Humidity
 humid_arr = fixSingularNaNs(humid_arr)
 humid_arr = replaceAllNaNs(humid_arr)
+humid_arr = standardizeColumn(humid_arr)
 print(checkForNaNs(humid_arr) )
 
 #Wind direction
 dir_arr = fixSingularNaNs(dir_arr)
 dir_arr = replaceAllNaNs(dir_arr)
+dir_arr = standardizeColumn(dir_arr)
 print(checkForNaNs(dir_arr) )
 
 #Wind Speed
 spd_arr = fixSingularNaNs(spd_arr)
 spd_arr = replaceAllNaNs(spd_arr)
+spd_arr = standardizeColumn(spd_arr)
 print(checkForNaNs(spd_arr) )
 
 #Atmospheric pressure
 atm_arr = fixSingularNaNs(atm_arr)
 atm_arr = replaceAllNaNs(atm_arr)
+atm_arr = standardizeColumn(atm_arr)
 print(checkForNaNs(atm_arr) )
 
 # Re-create dataset without missing data
@@ -175,33 +209,8 @@ for i in range(nrows):
 
 newDataSet = np.asarray(newDataSet)
 # print(newDataSet)
+
 pd.DataFrame(newDataSet).to_csv("processedTrain.csv")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
