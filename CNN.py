@@ -4,7 +4,7 @@ from array import *
 from sklearn.model_selection import train_test_split
 import tensorflow as tf 
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Activation, Flatten, Conv1D, MaxPooling1D
+from tensorflow.keras.layers import Dense, Activation, Dropout, Flatten, Conv1D, MaxPooling1D
 
 airData = pd.read_csv("processedTrain.csv", usecols=[1,2,3,4,5,6,7,8,9], sep="," )
 # print(airData)
@@ -46,13 +46,16 @@ model = Sequential()
 model.add(Conv1D(128, 3, input_shape=trainingData.shape[1:] ))
 model.add(Activation("tanh"))
 model.add(MaxPooling1D( pool_size=2 ) )
+# model.add(Dropout(0.2))
 
 model.add(Conv1D(128, 1))
 model.add(Activation("tanh"))
 model.add(MaxPooling1D( pool_size=1 ) )
+# model.add(Dropout(0.2))
 
 model.add(Flatten())
 model.add(Dense(64, activation='relu'))
+# model.add(Dropout(0.2))
 
 model.add(Dense(1))
 model.add(Activation("linear"))
